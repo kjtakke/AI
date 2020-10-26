@@ -3,7 +3,7 @@ import json
 import AiClass
 import CreateReferences
 
-file = "Australian Post Code Information"
+file = "https://raw.githubusercontent.com/kjtakke/AI/main/APC"
 jsonFileName = "postcodes"
 indexColumn = "Suburb Name"
 removeValues = [" HMAS", " Barracks", " bks", " SA", " WA", " NT", " QLD"," NSW", " VIC", " ACT", " TAS"]
@@ -74,3 +74,8 @@ def createRefenceFile(file, jsonFileName, indexColumn, removeValues = []):
   return indexDictionary
 
 indexDictionary = createRefenceFile(file, jsonFileName, indexColumn, removeValues)
+
+print("")
+print("Aranda: " + str(indexDictionary["Aranda"]))
+print("Belconnen: " + str(indexDictionary["Belconnen"]))
+print("Belconnen Town Centre: " + str(indexDictionary["Belconnen Town Centre"]))
