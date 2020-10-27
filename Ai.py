@@ -1,14 +1,6 @@
 import pandas as pd
 import json
 
-
-
-
-
-
-
-
-
 def createRefenceFile(file, jsonFileName, indexColumn, removeValues = []):
     """This function creates the json dictionary reference file to be used in the AiClass
 
@@ -83,36 +75,34 @@ def createRefenceFile(file, jsonFileName, indexColumn, removeValues = []):
         for x in range(strLen-1):       #two letters
             strShort = keys[x:x+2].lower()
 
-            if x <= 2:
+            if x < 1:
                 values["two"]["first"].append([strShort,0])
-            elif x <= strLen - 4:
-                values["two"]["mid"].append([strShort,0])
-            else:
+            elif x >= strLen - 2:
                 values["two"]["end"].append([strShort,0])
+            else:
+                values["two"]["mid"].append([strShort,0])
 
         for x in range(strLen-2):       #three letters
             strShort = keys[x:x+3].lower()
 
-            if x <= 4:
+            if x < 1:
                 values["three"]["first"].append([strShort,0])
-            elif x <= strLen - 5:
-                values["three"]["mid"].append([strShort,0])
-            else:
+            elif x >= strLen - 3:
                 values["three"]["end"].append([strShort,0])
+            else:
+                values["three"]["mid"].append([strShort,0])
 
-        if strLen > 5:
+        if strLen > 8:
 
             for x in range(strLen-3):   #four letters
                 strShort = keys[x:x+4].lower()
 
-                if x <= 5:
+                if x < 1:
                     values["four"]["first"].append([strShort,0])
-                elif x <= strLen - 6:
-                    values["four"]["mid"].append([strShort,0])
-                else:
+                elif x >= strLen - 4:
                     values["four"]["end"].append([strShort,0])
+                else:
+                    values["four"]["mid"].append([strShort,0])
 
     with open(jsonFileName + ".json", 'w') as fp:
         json.dump(indexDictionary, fp)
-
-
