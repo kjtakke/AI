@@ -11,7 +11,7 @@ def testAgainstReferenceFile(file, updateReferenceFile = False):
 
 
 
-def createRefenceFile(file, jsonFileName, indexColumn):
+def createRefenceFile(file, jsonFileName, indexColumn, valueColumns):
     """This function creates the json dictionary reference file to be used in the AI
 
     indexDictionary[i] = {
@@ -47,8 +47,16 @@ def createRefenceFile(file, jsonFileName, indexColumn):
     """
     df = pd.read_csv(file + ".csv", header=0, dtype=str)
     index = df[indexColumn].tolist()
+
+    z = 0
     indexDictionary = {}
     for i in index:
+        indexValues = []
+
+        for key in valueColumns:
+            lst = df[key].tolist()
+            indexValues.append(lst[z])
+
         indexDictionary[i] = {
             "passed":[],
             "two": {
@@ -76,8 +84,10 @@ def createRefenceFile(file, jsonFileName, indexColumn):
                     "stDev": 0,
                     "sum": 0
                 },
-            }
+            },
+            "values": indexValues
         }
+        z = z + 1
 
     for keys, values in indexDictionary.items():
         strLen = len(keys)
