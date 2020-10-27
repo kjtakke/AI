@@ -41,7 +41,8 @@ def createRefenceFile(file, jsonFileName, indexColumn, valueColumns):
                     "stDev": 0,         #Standard Deviation                      ["scores"]["stDev"]
                     "sum": 0            #Sum                                    ["scores"]["sum"]
                 },
-            }
+            },
+            "values": []                #csv values to bring accross            ["values"] i.e. ['2617', 'ACT']
         }
 
     """
