@@ -1,16 +1,42 @@
 import json
 import Ai
-
+import pandas as pd
 import pprint #https://docs.python.org/3/library/pprint.html#module-pprint
 
-file = "https://raw.githubusercontent.com/kjtakke/AI/main/APC"
-jsonFileName = "postcodes"
+file = "https://raw.githubusercontent.com/kjtakke/AI/main/APC.csv"
+trainingSet = "https://raw.githubusercontent.com/kjtakke/AI/main/trainingSet.csv"
+jsonFileName = "postcodes.json"
 indexColumn = "Suburb Name"
+valueColumns = ["Postcode","State"]
 removeValues = [" HMAS", " Barracks", " bks", " SA", " WA", " NT", " QLD"," NSW", " VIC", " ACT", " TAS"]
-Ai.createRefenceFile(file, jsonFileName, indexColumn)
+#Ai.createRefenceFile(file, jsonFileName, indexColumn, valueColumns)
+Ai.trainAI(trainingSet, jsonFileName, False)
 
-with open(jsonFileName + ".json", 'r') as fp:
+
+
+
+
+
+#Sandpit
+'''
+with open(jsonFileName, 'r') as fp:
     indexDictionary = json.load(fp)
 
 pp = pprint.PrettyPrinter(indent=2, width=80)
 pp.pprint(indexDictionary["Belconnen Town Centre"])
+
+valueColumns = ["Postcode","State"]
+df = pd.read_csv("https://raw.githubusercontent.com/kjtakke/AI/main/APC.csv", header=0, dtype=str)
+
+
+
+
+for x in range(len(valueColumns)):
+    indexValues = []
+    for key in valueColumns:
+        lst = df[key].tolist()
+        indexValues.append(lst[x])
+    print(indexValues)
+
+# State Map Region   District            Suburb Name Postcode
+'''
