@@ -1,8 +1,18 @@
 import pandas as pd
 import json
 
-def createRefenceFile(file, jsonFileName, indexColumn, removeValues = []):
-    """This function creates the json dictionary reference file to be used in the AiClass
+
+def testAgainstReferenceFile(file, updateReferenceFile = False):
+    """This function tests know values against the AI Reference File"""
+    pass
+
+
+
+
+
+
+def createRefenceFile(file, jsonFileName, indexColumn):
+    """This function creates the json dictionary reference file to be used in the AI
 
     indexDictionary[i] = {
             "passed":[],            #All accepted answers                       ["passed"]                  =["name1","name2"]
@@ -28,7 +38,7 @@ def createRefenceFile(file, jsonFileName, indexColumn, removeValues = []):
                     "max": 0,           #Max                                    ["scores"]["max"]
                     "median": 0,        #Median                                 ["scores"]["median"]
                     "average": 0,       #Average                                ["scores"]["average"]
-                    "stDev": 0,         #Standard Devation                      ["scores"]["stDev"]
+                    "stDev": 0,         #Standard Deviation                      ["scores"]["stDev"]
                     "sum": 0            #Sum                                    ["scores"]["sum"]
                 },
             }
@@ -106,3 +116,5 @@ def createRefenceFile(file, jsonFileName, indexColumn, removeValues = []):
 
     with open(jsonFileName + ".json", 'w') as fp:
         json.dump(indexDictionary, fp)
+
+
