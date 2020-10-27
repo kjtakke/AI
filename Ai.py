@@ -2,13 +2,24 @@ import pandas as pd
 import json
 
 
-def testAgainstReferenceFile(file, updateReferenceFile = False):
+def testAgainstReferenceFile(file, testColumn, answerColumn, updateReferenceFile = False):
     """This function tests know values against the AI Reference File"""
-    pass
+    df = pd.read_csv(file, header=0, dtype=str)
+    print(df.head())
+    indexDictionary = {}
+    print(df.count)
 
 
 
-
+def trainAI(trainingFile, referenceFile, updateReferenceFile = False):
+    """This function trains the AI"""
+    trainingSet = pd.read_csv(trainingFile, header=0, dtype=str)
+    print(trainingSet.head())
+    with open(referenceFile, 'r') as fp:
+        indexDictionary = json.load(fp)
+    print(indexDictionary["Belconnen Town Centre"])
+    
+    
 
 
 def createRefenceFile(file, jsonFileName, indexColumn, valueColumns):
@@ -46,7 +57,7 @@ def createRefenceFile(file, jsonFileName, indexColumn, valueColumns):
         }
 
     """
-    df = pd.read_csv(file + ".csv", header=0, dtype=str)
+    df = pd.read_csv(file, header=0, dtype=str)
     index = df[indexColumn].tolist()
 
     z = 0
