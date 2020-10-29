@@ -9,12 +9,16 @@ jsonFileName = "postcodes.json"
 indexColumn = "Suburb Name"
 valueColumns = ["Postcode","State"]
 removeValues = [" HMAS", " Barracks", " bks", " SA", " WA", " NT", " QLD"," NSW", " VIC", " ACT", " TAS"]
+compareFileName = "compare"
+eliminatedFileName = "Dinosaur"
+removeChars = ['"',"'","~","`","!","@","#","$","%","^","&","*","(",	")","_","-", "+","=","|","{","}","[","]",":",";","?","/",">","<",".",",",'\'']
+
 
 postcode = Ai.AI_Phraser
-postcode().base_set(file=file, jsonFileName=jsonFileName, indexColumn=indexColumn, valueColumns=valueColumns)
+#postcode().base_set(file=file, jsonFileName=jsonFileName, indexColumn=indexColumn, valueColumns=valueColumns)
 #postcode.trainAI(trainingSet, jsonFileName, False)
-
-
+#postcode().load(file=trainingSet, indexColumn="Location", newFileName=compareFileName, printLastItem=True)
+postcode().create_base_set_by_deliminator(file="Dinosaur", newFileName="deliminatedList", deliminator=" ", removeChars=removeChars, printLastItem=True)
 
 
 #Sandpit
