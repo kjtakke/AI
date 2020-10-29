@@ -9,10 +9,10 @@ jsonFileName = "postcodes.json"
 indexColumn = "Suburb Name"
 valueColumns = ["Postcode","State"]
 removeValues = [" HMAS", " Barracks", " bks", " SA", " WA", " NT", " QLD"," NSW", " VIC", " ACT", " TAS"]
-#Ai.createRefenceFile(file, jsonFileName, indexColumn, valueColumns)
-Ai.trainAI(trainingSet, jsonFileName, False)
 
-
+postcode = Ai.AI_Phraser
+postcode().base_set(file=file, jsonFileName=jsonFileName, indexColumn=indexColumn, valueColumns=valueColumns)
+#postcode.trainAI(trainingSet, jsonFileName, False)
 
 
 
