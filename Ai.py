@@ -13,6 +13,121 @@ class AI_Phraser:
         self.reiterateMatchedItems = reiterateMatchedItems
         self.reiterateAppendedItems = reiterateAppendedItems
 
+    def _json_settings(self, fixedTransient, indexValues = []):
+        """This function creates the json dictionary reference dictionary for the AI
+
+            indexDictionary[i] = {
+                    "type": "fixed",        #Base list or transient list                ["type"]                    ="fixed" or "transient"
+                    "passed":[],            #All accepted answers                       ["passed"]                  =["name1","name2"]
+                    "two": {                #Number of letters
+                        "first":[],             #First part of the string               ["two"]["first"]            =[["ab",0],["bc",0]]
+                        "mid":[],               #Middle part of the string              ["two"]["mid"]
+                        "end":[]                #End part of the string                 ["two"]["end"]
+                    },
+                    "three": {
+                        "first":[],                                                    #["three"]["first"]          =[["abc",0],["bcd",0]]
+                        "mid":[],                                                      #["three"]["mid"]
+                        "end":[]                                                       #["three"]["end"]
+                    },
+                    "four": {
+                        "first":[],                                                    #["four"]["first"]           =[["abcd",0],["bcde",0]]
+                        "mid":[],                                                      #["four"]["mid"]
+                        "end":[]                                                       #["four"]["end"]
+                    },
+                    "scores":{              #Acepted Scores and aggregated values
+                        "allScores": [],    #All accepted Scores                        ["scores"]["allScores"]
+                        "statistics": {     #Statistics
+                            "min": 0,           #Min                                    ["scores"]["min"]
+                            "max": 0,           #Max                                    ["scores"]["max"]
+                            "median": 0,        #Median                                 ["scores"]["median"]
+                            "average": 0,       #Average                                ["scores"]["average"]
+                            "stDev": 0,         #Standard Deviation                      ["scores"]["stDev"]
+                            "sum": 0            #Sum                                    ["scores"]["sum"]
+                        },
+                    },
+                    "values": []                #csv values to bring accross            ["values"] i.e. ['2617', 'ACT']
+                }
+                :param jsonFileName:
+                :param indexColumn:
+                :param valueColumns:
+
+            """
+        return {
+            "type": fixedTransient,
+            "passed":[],
+            "two": {
+                "first":[],
+                "mid":[],
+                "end":[]
+            },
+            "three": {
+                "first":[],
+                "mid":[],
+                "end":[]
+            },
+            "four": {
+                "first":[],
+                "mid":[],
+                "end":[]
+            },
+            "scores":{
+                "allScores": [],
+                "statistics": {
+                    "min": 0,
+                    "max": 0,
+                    "median": 0,
+                    "average": 0,
+                    "stDev": 0,
+                    "sum": 0
+                },
+            },
+            "values": indexValues
+        }
+
+
+    def _break_up_phrase(self, indexDictionary):
+        try:
+           for keys, values in indexDictionary.items():
+               strLen = len(keys)
+               keys = str(keys)
+
+               for x in range(strLen-1):       #two letters
+                   strShort = keys[x:x+2].lower()
+
+                   if x < 1:
+                       values["two"]["first"].append([strShort,0])
+                   elif x >= strLen - 2:
+                       values["two"]["end"].append([strShort,0])
+                   else:
+                       values["two"]["mid"].append([strShort,0])
+
+               for x in range(strLen-2):       #three letters
+                   strShort = keys[x:x+3].lower()
+
+                   if x < 1:
+                       values["three"]["first"].append([strShort,0])
+                   elif x >= strLen - 3:
+                       values["three"]["end"].append([strShort,0])
+                   else:
+                       values["three"]["mid"].append([strShort,0])
+
+               if strLen > 8:
+
+                   for x in range(strLen-3):   #four letters
+                       strShort = keys[x:x+4].lower()
+
+                       if x < 1:
+                           values["four"]["first"].append([strShort,0])
+                       elif x >= strLen - 4:
+                           values["four"]["end"].append([strShort,0])
+                       else:
+                           values["four"]["mid"].append([strShort,0])
+
+           return indexDictionary
+
+        except:
+           print("Error subdividing phrase")
+
 
     def _breakdown(self, itemName):
         """This function develops the JSON format for items to be compared"""
@@ -21,39 +136,10 @@ class AI_Phraser:
         else:
             append = "fixed"
         compareDictionary = {}
-        compare = compareDictionary[itemName] = {
-            "type": append,
-            "passed":[],
-            "two": {
-                "first":[],
-                "mid":[],
-                "end":[]
-            },
-            "three": {
-                "first":[],
-                "mid":[],
-                "end":[]
-            },
-            "four": {
-                "first":[],
-                "mid":[],
-                "end":[]
-            },
-            "scores":{
-                "allScores": [],
-                "statistics": {
-                    "min": 0,
-                    "max": 0,
-                    "median": 0,
-                    "average": 0,
-                    "stDev": 0,
-                    "sum": 0
-                },
-            },
-            "values": []
-        }
+        compare = compareDictionary[itemName] = self._json_settings(append)
 
         return compare
+
 
     def _deliminatBreakdown(self, itemName, fixed):
         """This function develops the JSON format for items to be compared"""
@@ -62,43 +148,11 @@ class AI_Phraser:
         else:
             append = "fixed"
         compareDictionary = {}
-        compare = compareDictionary[itemName] = {
-            "type": append,
-            "passed":[],
-            "two": {
-                "first":[],
-                "mid":[],
-                "end":[]
-            },
-            "three": {
-                "first":[],
-                "mid":[],
-                "end":[]
-            },
-            "four": {
-                "first":[],
-                "mid":[],
-                "end":[]
-            },
-            "scores":{
-                "allScores": [],
-                "statistics": {
-                    "min": 0,
-                    "max": 0,
-                    "median": 0,
-                    "average": 0,
-                    "stDev": 0,
-                    "sum": 0
-                },
-            },
-            "values": []
-        }
+        compare = compareDictionary[itemName] = self._json_settings(append)
 
         return compare
 
-    ##################################################################################################################################
-    # NEED TO ADD PHRASE BREAKDOWN Two, Three, Four
-    ##################################################################################################################################
+
     def load(self, file, indexColumn, newFileName, printLastItem=False):
         df = pd.read_csv(file, header=0, dtype=str)
         index = df[indexColumn].tolist()
@@ -204,9 +258,7 @@ class AI_Phraser:
             indexDictionary = json.load(fp)
         print(indexDictionary["Belconnen Town Centre"])
 
-    ##################################################################################################################################
-    # NEED TO ADD PHRASE BREAKDOWN Two, Three, Four
-    ##################################################################################################################################
+
     def create_base_set_by_deliminator(self, file, newFileName, deliminator=" ", removeChars = [], fixed=True, printLastItem=False):
         """This function is used to break text into phrases by deliminator"""
         fileTodeliminat = open(file + ".txt", 'r')
@@ -237,49 +289,8 @@ class AI_Phraser:
                 print("Invalid last item")
 
 
-
-    ##################################################################################################################################
-    # NEED TO REDUCE FUNCTION SIZE INTO SMALLER FUNCTIONS TO BE REUSED
-    ##################################################################################################################################
     def base_set(self, file, jsonFileName, indexColumn, valueColumns):
-        """This function creates the json dictionary reference file to be used in the AI
-
-        indexDictionary[i] = {
-                "type": "fixed",        #Base list or transient list                ["type"]                    ="fixed" or "transient"
-                "passed":[],            #All accepted answers                       ["passed"]                  =["name1","name2"]
-                "two": {                #Number of letters
-                    "first":[],             #First part of the string               ["two"]["first"]            =[["ab",0],["bc",0]]
-                    "mid":[],               #Middle part of the string              ["two"]["mid"]
-                    "end":[]                #End part of the string                 ["two"]["end"]
-                },
-                "three": {
-                    "first":[],                                                    #["three"]["first"]          =[["abc",0],["bcd",0]]
-                    "mid":[],                                                      #["three"]["mid"]
-                    "end":[]                                                       #["three"]["end"]
-                },
-                "four": {
-                    "first":[],                                                    #["four"]["first"]           =[["abcd",0],["bcde",0]]
-                    "mid":[],                                                      #["four"]["mid"]
-                    "end":[]                                                       #["four"]["end"]
-                },
-                "scores":{              #Acepted Scores and aggregated values
-                    "allScores": [],    #All accepted Scores                        ["scores"]["allScores"]
-                    "statistics": {     #Statistics
-                        "min": 0,           #Min                                    ["scores"]["min"]
-                        "max": 0,           #Max                                    ["scores"]["max"]
-                        "median": 0,        #Median                                 ["scores"]["median"]
-                        "average": 0,       #Average                                ["scores"]["average"]
-                        "stDev": 0,         #Standard Deviation                      ["scores"]["stDev"]
-                        "sum": 0            #Sum                                    ["scores"]["sum"]
-                    },
-                },
-                "values": []                #csv values to bring accross            ["values"] i.e. ['2617', 'ACT']
-            }
-            :param jsonFileName:
-            :param indexColumn:
-            :param valueColumns:
-
-        """
+        """This function creates the json dictionary reference file to be used in the AI"""
         try:
             df = pd.read_csv(file, header=0, dtype=str)
         except:
@@ -293,86 +304,22 @@ class AI_Phraser:
             print("Error selecting column")
 
         try:
-            for i in index:
+            for dictItemName in index:
                 indexValues = []
 
                 for key in valueColumns:
                     lst = df[key].tolist()
                     indexValues.append(lst[z])
 
-                indexDictionary[i] = {
-                    "type": "fixed",
-                    "passed":[],
-                    "two": {
-                        "first":[],
-                        "mid":[],
-                        "end":[]
-                    },
-                    "three": {
-                        "first":[],
-                        "mid":[],
-                        "end":[]
-                    },
-                    "four": {
-                        "first":[],
-                        "mid":[],
-                        "end":[]
-                    },
-                    "scores":{
-                        "allScores": [],
-                        "statistics": {
-                            "min": 0,
-                            "max": 0,
-                            "median": 0,
-                            "average": 0,
-                            "stDev": 0,
-                            "sum": 0
-                        },
-                    },
-                    "values": indexValues
-                }
+                indexDictionary[dictItemName] = self._json_settings("fixed", indexValues)
+
                 z = z + 1
         except:
             print("Error creating JSON format")
 
-        try:
-            for keys, values in indexDictionary.items():
-                strLen = len(keys)
-                keys = str(keys)
+        indexDictionary = self._break_up_phrase(indexDictionary)
 
-                for x in range(strLen-1):       #two letters
-                    strShort = keys[x:x+2].lower()
 
-                    if x < 1:
-                        values["two"]["first"].append([strShort,0])
-                    elif x >= strLen - 2:
-                        values["two"]["end"].append([strShort,0])
-                    else:
-                        values["two"]["mid"].append([strShort,0])
-
-                for x in range(strLen-2):       #three letters
-                    strShort = keys[x:x+3].lower()
-
-                    if x < 1:
-                        values["three"]["first"].append([strShort,0])
-                    elif x >= strLen - 3:
-                        values["three"]["end"].append([strShort,0])
-                    else:
-                        values["three"]["mid"].append([strShort,0])
-
-                if strLen > 8:
-
-                    for x in range(strLen-3):   #four letters
-                        strShort = keys[x:x+4].lower()
-
-                        if x < 1:
-                            values["four"]["first"].append([strShort,0])
-                        elif x >= strLen - 4:
-                            values["four"]["end"].append([strShort,0])
-                        else:
-                            values["four"]["mid"].append([strShort,0])
-        except:
-            print("Error subdividing phrase")
 
         try:    #Create JSON file
             with open(jsonFileName + ".json", 'w') as fp:
