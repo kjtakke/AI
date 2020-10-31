@@ -13,6 +13,8 @@ class AI_Phraser:
         self.reiterateMatchedItems = reiterateMatchedItems
         self.reiterateAppendedItems = reiterateAppendedItems
 
+    #Initial Setup
+    #__________________________________________________________________________________________________________________________________________________
     def _json_settings(self, fixedTransient, indexValues = []):
         """This function creates the json dictionary reference dictionary for the AI
 
@@ -86,42 +88,47 @@ class AI_Phraser:
 
 
     def _break_up_phrase(self, indexDictionary):
+        """"This function breaks the phrase up into small bites ready for comparison""""
+
         try:
            for keys, values in indexDictionary.items():
-               strLen = len(keys)
-               keys = str(keys)
+               try:
+                   strLen = len(keys)
+                   keys = str(keys)
 
-               for x in range(strLen-1):       #two letters
-                   strShort = keys[x:x+2].lower()
-
-                   if x < 1:
-                       values["two"]["first"].append([strShort,0])
-                   elif x >= strLen - 2:
-                       values["two"]["end"].append([strShort,0])
-                   else:
-                       values["two"]["mid"].append([strShort,0])
-
-               for x in range(strLen-2):       #three letters
-                   strShort = keys[x:x+3].lower()
-
-                   if x < 1:
-                       values["three"]["first"].append([strShort,0])
-                   elif x >= strLen - 3:
-                       values["three"]["end"].append([strShort,0])
-                   else:
-                       values["three"]["mid"].append([strShort,0])
-
-               if strLen > 8:
-
-                   for x in range(strLen-3):   #four letters
-                       strShort = keys[x:x+4].lower()
+                   for x in range(strLen-1):       #two letters
+                       strShort = keys[x:x+2].lower()
 
                        if x < 1:
-                           values["four"]["first"].append([strShort,0])
-                       elif x >= strLen - 4:
-                           values["four"]["end"].append([strShort,0])
+                           values["two"]["first"].append([strShort,0])
+                       elif x >= strLen - 2:
+                           values["two"]["end"].append([strShort,0])
                        else:
-                           values["four"]["mid"].append([strShort,0])
+                           values["two"]["mid"].append([strShort,0])
+
+                   for x in range(strLen-2):       #three letters
+                       strShort = keys[x:x+3].lower()
+
+                       if x < 1:
+                           values["three"]["first"].append([strShort,0])
+                       elif x >= strLen - 3:
+                           values["three"]["end"].append([strShort,0])
+                       else:
+                           values["three"]["mid"].append([strShort,0])
+
+                   if strLen > 8:
+
+                       for x in range(strLen-3):   #four letters
+                           strShort = keys[x:x+4].lower()
+
+                           if x < 1:
+                               values["four"]["first"].append([strShort,0])
+                           elif x >= strLen - 4:
+                               values["four"]["end"].append([strShort,0])
+                           else:
+                               values["four"]["mid"].append([strShort,0])
+               except:
+                    pass
 
            return indexDictionary
 
@@ -137,7 +144,6 @@ class AI_Phraser:
             append = "fixed"
         compareDictionary = {}
         compare = compareDictionary[itemName] = self._json_settings(append)
-
         return compare
 
 
@@ -156,108 +162,30 @@ class AI_Phraser:
     def load(self, file, indexColumn, newFileName, printLastItem=False):
         df = pd.read_csv(file, header=0, dtype=str)
         index = df[indexColumn].tolist()
-        compareDictionary = {}
+
+        indexDictionary = {}
         for item in index:
             try:    #Duplicate items are not loaded
-                compareDictionary[item] = (self._breakdown(item))
+                indexDictionary[item] = (self._breakdown(item))
             except:
                 pass
 
+        indexDictionary = self._break_up_phrase(indexDictionary)
+
         try:    #Create JSON file
+
             with open(newFileName + ".json", 'w') as fp:
-                json.dump(compareDictionary, fp)
+                json.dump(indexDictionary, fp)
         except:
             print("Invalid JSON file")
 
         if printLastItem == True:
             try:
                 pp = pprint.PrettyPrinter(indent=2, width=80)
-                pp.pprint(compareDictionary[item])
-                compareDictionary[item] = (self._breakdown(item))
+                pp.pprint(indexDictionary[item])
+                indexDictionary[item] = (self._breakdown(item))
             except:
                 print("Invalid last item")
-
-
-    def _blank_canvas(self, fileName):
-        """This function creates a blank JSON canvas which is used if no reference file is identified/loaded"""
-        try:    #Create JSON file
-            indexDictionary = {}
-            with open(fileName + ".json", 'w') as fp:
-                json.dump(indexDictionary, fp)
-        except:
-            print("Error creating loading file")
-
-
-    def _scoring(self):
-        """This function creates the neural mapping by adding or subtracting scores"""
-        pass
-
-
-    def _compare(self):
-        """This function compares two phrases before scoring"""
-        pass
-
-
-    def _init_iterate(self):
-        """This function iterates through a given list"""
-        pass
-
-
-    def _iterate_matched_items(self):
-        """This function iterates through all matched items"""
-        pass
-
-
-    def _iterate_transient_items(self):
-        """This function iterates through all items labled 'transient'"""
-        pass
-
-
-    def _reiterate(self):
-        """This function reiterates based in the users selection"""
-        pass
-
-
-    def _add_phrase(self):
-        pass
-
-
-    def _create_migrate_file(self):
-        pass
-
-
-    def _output(self):
-        pass
-
-
-    def _gui(self):
-        pass
-
-
-    def migrate(self):
-        pass
-
-
-    def nesting(self):
-        pass
-
-
-    def test_file(self, file, testColumn, answerColumn, updateReferenceFile = False):
-        """This function tests know values against the AI Reference File"""
-        df = pd.read_csv(file, header=0, dtype=str)
-        #print(df.head())
-        indexDictionary = {}
-        #print(df.count)
-
-
-    def trainAI(self, trainingFile, referenceFile, updateReferenceFile = False):
-        """This function trains the AI"""
-        trainingSet = pd.read_csv(trainingFile, header=0, dtype=str)
-        #print(trainingSet.head())
-        with open(referenceFile, 'r') as fp:
-            indexDictionary = json.load(fp)
-        print(indexDictionary["Belconnen Town Centre"])
-
 
     def create_base_set_by_deliminator(self, file, newFileName, deliminator=" ", removeChars = [], fixed=True, printLastItem=False):
         """This function is used to break text into phrases by deliminator"""
@@ -326,3 +254,86 @@ class AI_Phraser:
                 json.dump(indexDictionary, fp)
         except:
                 print("Error creating loading file")
+
+
+    def _blank_canvas(self, fileName):
+        """This function creates a blank JSON canvas which is used if no reference file is identified/loaded"""
+        try:    #Create JSON file
+            indexDictionary = {}
+            with open(fileName + ".json", 'w') as fp:
+                json.dump(indexDictionary, fp)
+        except:
+            print("Error creating loading file")
+
+
+    #Output
+    #__________________________________________________________________________________________________________________________________________________
+    def _create_migrate_file(self):
+        pass
+
+
+    def _output(self):
+        pass
+
+
+    def migrate(self):
+        pass
+
+
+    def nesting(self):
+        pass
+
+
+    #AI Brain
+    def _compare(self):
+        """This function compares two phrases before scoring"""
+        pass
+
+    def _scoring(self):
+        """This function creates the neural mapping by adding or subtracting scores"""
+        pass
+
+
+    def _add_phrase(self):
+        pass
+
+
+    def _init_iterate(self):
+        """This function iterates through a given list"""
+        pass
+
+    def _iterate_matched_items(self):
+        """This function iterates through all matched items"""
+        pass
+
+
+    def _iterate_transient_items(self):
+        """This function iterates through all items labled 'transient'"""
+        pass
+
+
+    def _reiterate(self):
+        """This function reiterates based in the users selection"""
+        pass
+
+    def test_file(self, file, testColumn, answerColumn, updateReferenceFile = False):
+        """This function tests know values against the AI Reference File"""
+        df = pd.read_csv(file, header=0, dtype=str)
+        #print(df.head())
+        indexDictionary = {}
+        #print(df.count)
+
+    def trainAI(self, trainingFile, referenceFile, updateReferenceFile = False):
+        """This function trains the AI"""
+        trainingSet = pd.read_csv(trainingFile, header=0, dtype=str)
+        #print(trainingSet.head())
+        with open(referenceFile, 'r') as fp:
+            indexDictionary = json.load(fp)
+        print(indexDictionary["Belconnen Town Centre"])
+
+
+
+    #GUI
+    #__________________________________________________________________________________________________________________________________________________
+    def _gui(self):
+        pass

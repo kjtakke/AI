@@ -2,22 +2,25 @@ import json
 import Ai
 import pandas as pd
 import pprint #https://docs.python.org/3/library/pprint.html#module-pprint
+import ammendData
+
 
 file = "https://raw.githubusercontent.com/kjtakke/AI/main/APC.csv"
-trainingSet = "https://raw.githubusercontent.com/kjtakke/AI/main/trainingSet.csv"
+trainingSet = "trainingSet.csv"
 jsonFileName = "postcodes"
 indexColumn = "Suburb Name"
 valueColumns = ["Postcode","State"]
-removeValues = [" HMAS", " Barracks", " bks", " SA", " WA", " NT", " QLD"," NSW", " VIC", " ACT", " TAS"]
+removeValues = [" HMAS", " Barracks", " bks", " SA", " WA", " NT", " QLD"," NSW", " VIC", " ACT", " TAS", "tba", "store", '"',"'","~","`","!","@","#","$","%","^","&","*","(",	")","_","-", "+","=","|","{","}","[","]",":",";","?","/",">","<",".",",",'\'']
 compareFileName = "compare"
 eliminatedFileName = "Dinosaur"
 removeChars = ['"',"'","~","`","!","@","#","$","%","^","&","*","(",	")","_","-", "+","=","|","{","}","[","]",":",";","?","/",">","<",".",",",'\'']
 
+#ammendData.removeValues("trainingSet.csv", "Location", "trainingSet.csv", removeValues, False)
 
 postcode = Ai.AI_Phraser
-postcode().base_set(file=file, jsonFileName=jsonFileName, indexColumn=indexColumn, valueColumns=valueColumns)
+#postcode().base_set(file=file, jsonFileName=jsonFileName, indexColumn=indexColumn, valueColumns=valueColumns)
 #postcode.trainAI(trainingSet, jsonFileName, False)
-#postcode().load(file=trainingSet, indexColumn="Location", newFileName=compareFileName, printLastItem=True)
+postcode().load(file=trainingSet, indexColumn="Location", newFileName=compareFileName, printLastItem=True)
 #postcode().create_base_set_by_deliminator(file="Dinosaur", newFileName="deliminatedList", deliminator=" ", removeChars=removeChars, printLastItem=True)
 
 
