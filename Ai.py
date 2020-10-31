@@ -266,25 +266,8 @@ class AI_Phraser:
             print("Error creating loading file")
 
 
-    #Output
-    #__________________________________________________________________________________________________________________________________________________
-    def _create_migrate_file(self):
-        pass
-
-
-    def _output(self):
-        pass
-
-
-    def migrate(self):
-        pass
-
-
-    def nesting(self):
-        pass
-
-
     #AI Brain
+    #__________________________________________________________________________________________________________________________________________________
     def _compare(self):
         """This function compares two phrases before scoring"""
         pass
@@ -331,6 +314,23 @@ class AI_Phraser:
             indexDictionary = json.load(fp)
         print(indexDictionary["Belconnen Town Centre"])
 
+
+    #Output
+    #__________________________________________________________________________________________________________________________________________________
+    def _create_migrate_file(self):
+        pass
+
+
+    def _output(self):
+        pass
+
+
+    def migrate(self):
+        pass
+
+
+    def nesting(self):
+        pass
 
 
     #GUI
